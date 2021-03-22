@@ -17,5 +17,8 @@ class Cart{
 
     public function removeProduct(){
     }
+
+    public function checkout(){
+    }
 }
 ?>
