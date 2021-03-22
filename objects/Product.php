@@ -18,7 +18,7 @@ class Product{
         $stmt->bindparam(":name_IN", $name_IN);
         $stmt->bindparam(":price_IN", $price_IN);
 
-        return $stmt->execute();    //Needs to be converted to JSON
+        return $stmt->execute();
     }
 
     public function delete(){
@@ -28,6 +28,11 @@ class Product{
     }
 
     public function read(){
+        $sql = "SELECT name, price FROM products";
+        $stmt = $this->dbConnect->query($sql);
+        $stmt->execute();
+        
+        echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
     }
 }
 ?>
