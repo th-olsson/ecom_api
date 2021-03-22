@@ -21,14 +21,26 @@ class Product{
         return $stmt->execute();
     }
 
-    public function delete(){
+    public function delete($id_IN){
+        $sql = "DELETE FROM products WHERE id = :id_IN";
+        $stmt = $this->dbConnect->prepare($sql);
+        $stmt->bindparam(":id_IN", $id_IN);
+
+        $stmt->execute();
+
+        if ($stmt->rowCount() < 1){
+            echo "No product with id of $id_IN was found";
+        } else {
+            echo "Product with id of $id_IN was successfully deleted";
+        }
+
     }
 
     public function update(){
     }
 
     public function read(){
-        $sql = "SELECT name, price FROM products";
+        $sql = "SELECT id, name, price FROM products";
         $stmt = $this->dbConnect->query($sql);
         $stmt->execute();
         
