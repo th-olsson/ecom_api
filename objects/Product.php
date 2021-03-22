@@ -36,7 +36,20 @@ class Product{
 
     }
 
-    public function update(){
+    public function update($name_IN, $price_IN, $id_IN){
+            $sql = "UPDATE products SET name = :name_IN, price = :price_IN WHERE id = :id_IN";
+            $stmt = $this->dbConnect->prepare($sql);
+            $stmt->bindparam(":name_IN", $name_IN);
+            $stmt->bindparam(":price_IN", $price_IN);
+            $stmt->bindparam(":id_IN", $id_IN);
+    
+            $stmt->execute();
+            
+            if ($stmt->rowCount() < 1){
+                echo "Product with id of $id_IN either doesn't exist or already has currently specified values";
+            } else {
+                echo "Product with id of $id_IN was successfully updated to name: $name_IN, price: $price_IN";
+            }
     }
 
     public function read(){
