@@ -11,7 +11,7 @@ if (isset($_GET['id'])){
 
     $product->delete($id);
 } else {
-    echo "Specify which product should be deleted";
+    echo json_encode("Specify which product should be deleted with product id");
 }
 
 ?>

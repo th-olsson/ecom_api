@@ -1,9 +1,10 @@
-<?php
-class Product{
-    //Product properties
-    private $product_id;
-    private $name;
-    private $price;
+<?php   #Interacts with products-table in database
+class Product{ 
+
+    //Fields of product-table for reference:
+    # id
+    # name
+    # price
 
     //Database connection
     private $dbConnect;
@@ -13,6 +14,7 @@ class Product{
 
     //Methods for endpoints
     public function create($name_IN, $price_IN){
+
         $sql = "INSERT INTO products (name, price) VALUES (:name_IN, :price_IN)";
         $stmt = $this->dbConnect->prepare($sql);
         $stmt->bindparam(":name_IN", $name_IN);
@@ -29,35 +31,40 @@ class Product{
         $stmt->execute();
 
         if ($stmt->rowCount() < 1){
-            echo "No product with id of $id_IN was found";
+            echo json_encode("No product with id of $id_IN was found");
         } else {
-            echo "Product with id of $id_IN was successfully deleted";
+            echo json_encode("Product with id of $id_IN was successfully deleted");
         }
-
     }
 
     public function update($name_IN, $price_IN, $id_IN){
-            $sql = "UPDATE products SET name = :name_IN, price = :price_IN WHERE id = :id_IN";
-            $stmt = $this->dbConnect->prepare($sql);
-            $stmt->bindparam(":name_IN", $name_IN);
-            $stmt->bindparam(":price_IN", $price_IN);
-            $stmt->bindparam(":id_IN", $id_IN);
-    
-            $stmt->execute();
-            
-            if ($stmt->rowCount() < 1){
-                echo "Product with id of $id_IN either doesn't exist or already has currently specified values";
-            } else {
-                echo "Product with id of $id_IN was successfully updated to name: $name_IN, price: $price_IN";
-            }
+        $sql = "UPDATE products SET name = :name_IN, price = :price_IN WHERE id = :id_IN";
+        $stmt = $this->dbConnect->prepare($sql);
+        $stmt->bindparam(":name_IN", $name_IN);
+        $stmt->bindparam(":price_IN", $price_IN);
+        $stmt->bindparam(":id_IN", $id_IN);
+
+        $stmt->execute();
+        
+        if ($stmt->rowCount() < 1){
+            echo json_encode("Product with id of $id_IN either doesn't exist or already has currently specified values");
+        } else {
+            echo json_encode("Product with id of $id_IN was successfully updated to name: $name_IN, price: $price_IN");
+        }
     }
 
     public function read(){
         $sql = "SELECT id, name, price FROM products";
         $stmt = $this->dbConnect->query($sql);
-        $stmt->execute();
         
-        echo json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
+        //Stop script if execute fails
+        if ( !$stmt->execute() ){
+            echo json_encode("Can't get products");
+            die();
+        }
+        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        echo json_encode($data);
     }
 }
 ?>

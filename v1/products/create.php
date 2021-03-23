@@ -12,8 +12,8 @@ if (isset($_GET['name']) && isset($_GET['price'])){
 
     $product->create($name, $price);
 
-    echo "Product created where name: $name and price: $price";
+    echo json_encode("Product created where name: $name and price: $price");
 } else {
-    echo "Error: product name and price required";
+    echo json_encode("Error: product name and price required");
 }
 ?>
