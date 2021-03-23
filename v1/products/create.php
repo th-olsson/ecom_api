@@ -1,4 +1,6 @@
 <?php
+header('Content-Type: application/json');
+
 include("../../config/db.php");
 include("../../objects/Product.php");
 
