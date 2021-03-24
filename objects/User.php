@@ -30,7 +30,20 @@ class User{
         return $stmt->execute();
     }
 
-    public function login(){
+    public function login($username_IN, $password_IN){
+        $sql = "SELECT * FROM users WHERE username = :username_IN AND password = :password_IN";
+
+        $stmt = $this->dbConnect->prepare($sql);
+        $stmt->bindParam(":username_IN", $username_IN);
+        $stmt->bindParam(":password_IN", $password_IN);
+        
+        $stmt->execute();
+
+        if ($stmt->rowCount() == 1){
+            echo json_encode("User has successfully been logged in");
+        } else {
+            echo json_encode("Invalid login credentials");
+        }
     }
 }
 ?>
