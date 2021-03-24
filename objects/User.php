@@ -1,7 +1,13 @@
-<?php
+<?php   #Interacts with users-table in database
 class User{
-    //User properties
-    private $user_id;
+
+    //Fields of users-table for reference:
+    # id
+    # email
+    # username
+    # password
+
+    private $id;
     private $email;
     private $username;
     private $password;
@@ -13,7 +19,15 @@ class User{
     }
 
     //Methods for endpoints
-    public function register(){
+    public function register($email_IN, $username_IN, $password_IN){   
+        $sql = "INSERT INTO users (email, username, password) VALUES (:email_IN, :username_IN, :password_IN)";
+
+        $stmt = $this->dbConnect->prepare($sql);
+        $stmt->bindParam(":email_IN", $email_IN);
+        $stmt->bindParam(":username_IN", $username_IN);
+        $stmt->bindParam(":password_IN", $password_IN);
+
+        return $stmt->execute();
     }
 
     public function login(){
