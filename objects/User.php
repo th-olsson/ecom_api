@@ -40,9 +40,9 @@ class User{
         $stmt->execute();
 
         //Checks if input matches a record in database & verifies hashed password
-        if ($stmt->rowCount() == 1 && $pwd_verify_IN == 1){
+        if ($stmt->rowCount() == 1 && $pwd_verify_IN == true){ //Correct login credentials
             echo json_encode("User has successfully been logged in");
-        } else {
+        } else {    //Incorrect login credentials
             echo json_encode("Invalid login credentials");
         }
     }
