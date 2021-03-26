@@ -33,18 +33,35 @@ class User{
     }
 
     public function login($username_IN, $pwd_verify_IN){
-        $sql = "SELECT * FROM users WHERE username = :username_IN";
+        $sql = "SELECT id, username FROM users WHERE username = :username_IN";
 
         $stmt = $this->dbConnect->prepare($sql);
         $stmt->bindParam(":username_IN", $username_IN);
         $stmt->execute();
 
         //Checks if input matches a record in database & verifies hashed password
-        if ($stmt->rowCount() == 1 && $pwd_verify_IN == true){ //Correct login credentials
+        if ($stmt->rowCount() == 1 && $pwd_verify_IN == true){
+            $row = $stmt->fetch();
+            $this->createToken($row['id'], $row['username']);
+
             echo json_encode("User has successfully been logged in");
-        } else {    //Incorrect login credentials
+        } else {
             echo json_encode("Invalid login credentials");
         }
     }
+
+    public function createToken($id, $username){
+
+        $time = time();
+        $token = md5($time . $id . $username);
+
+        $sql = "INSERT INTO sessions(user_id, token, last_used) VALUES(:user_id_IN, :token_IN, :last_used_IN)";
+        $stmt = $this->dbConnect->prepare($sql);
+        $stmt->bindParam(":user_id_IN", $id);
+        $stmt->bindParam(":token_IN", $token);
+        $stmt->bindParam(":last_used_IN", $time);
+        $stmt->execute();
+    }
+
 }
 ?>
