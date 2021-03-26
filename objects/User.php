@@ -42,7 +42,7 @@ class User{
         //Checks if input matches a record in database & verifies hashed password
         if ($stmt->rowCount() == 1 && $pwd_verify_IN == true){
             $row = $stmt->fetch();
-            $this->createToken($row['id'], $row['username']);
+            return $this->createToken($row['id'], $row['username']);
 
             echo json_encode("User has successfully been logged in");
         } else {
@@ -51,7 +51,12 @@ class User{
     }
 
     public function createToken($id, $username){
+        $checked_token = $this->checkToken($id);
 
+        if ($checked_token != false){
+            return $checked_token;
+        }
+        
         $time = time();
         $token = md5($time . $id . $username);
 
@@ -61,7 +66,44 @@ class User{
         $stmt->bindParam(":token_IN", $token);
         $stmt->bindParam(":last_used_IN", $time);
         $stmt->execute();
+
+        return $token;
     }
 
+    public function checkToken($id){
+        $active_time = time() - (60*60);
+
+        $sql = "SELECT token, last_used FROM sessions WHERE user_id = :user_id_IN AND last_used > :active_time_IN";
+        $stmt = $this->dbConnect->prepare($sql);
+        $stmt->bindParam(":user_id_IN", $id);
+        $stmt->bindParam(":active_time_IN", $active_time);
+        $stmt->execute();
+
+        $row = $stmt->fetch();
+
+        if(isset($row['token'])){
+            return $row['token'];
+        } else {
+            return false;
+        }
+    }
+
+    public function isTokenValid($token){
+        $active_time = time() - (60*60);
+
+        $sql = "SELECT token, last_used FROM sessions WHERE token = :token_IN AND last_used > :active_time_IN";
+        $stmt = $this->dbConnect->prepare($sql);
+        $stmt->bindParam(":token_IN", $token);
+        $stmt->bindParam(":active_time_IN", $active_time);
+        $stmt->execute();
+
+        $row = $stmt->fetch();
+
+        if(isset($row['token'])){
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
 ?>

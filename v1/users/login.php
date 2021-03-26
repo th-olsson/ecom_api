@@ -20,7 +20,9 @@ if (isset($_GET['username']) && isset($_GET['password'])){
     }
 
     $user = new User($db);
-    $user->login($_GET['username'], pwdVerify($db));
+    $return = new stdClass();
+    $return->token = $user->Login($_GET['username'], pwdVerify($db));
+    print_r(json_encode($return));
 
 } else {
     echo json_encode("Error: username and password needs to be specified");
