@@ -100,10 +100,20 @@ class User{
         $row = $stmt->fetch();
 
         if(isset($row['token'])){
+            $this->updateToken($row['token']);
             return true;
         } else {
             return false;
         }
+    }
+
+    private function updateToken($token){
+        $sql = "UPDATE sessions SET last_used = :last_used_IN WHERE token = :token_IN";
+        $stmt = $this->dbConnect->prepare($sql);
+        $time = time();
+        $stmt->bindParam(":last_used_IN", $time);
+        $stmt->bindParam(":token_IN", $token);
+        $stmt->execute();
     }
 }
 ?>
