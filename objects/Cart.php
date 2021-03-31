@@ -16,7 +16,7 @@ class Cart{
     public function addProduct($product_id_IN, $token_IN){
         $user_id_IN = $this->getUserIdFromToken($token_IN);
 
-        //See if product exists
+        //See if product with specified id exists
         $sql = "SELECT name FROM products WHERE id = :product_id_IN";
         $stmt = $this->dbConnect->prepare($sql);
         $stmt->bindParam(":product_id_IN", $product_id_IN);
@@ -26,7 +26,7 @@ class Cart{
             die();
         }
                 
-        //See first if product already exists and declare quantity
+        //See first if product already exists in cart and declare quantity
         $sql = "SELECT quantity FROM cart WHERE user_id = :user_id_IN AND product_id = :product_id_IN";
         $stmt = $this->dbConnect->prepare($sql);
         $stmt->bindParam(":user_id_IN", $user_id_IN);
