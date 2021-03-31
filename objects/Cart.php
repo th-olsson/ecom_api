@@ -116,7 +116,17 @@ class Cart{
         
     }
 
-    public function checkout(){
+    public function checkout($token_IN){
+        $user_id_IN = $this->getUserIdFromToken($token_IN);
+
+        //Get cart records (product_id and quantity) with specified user id
+        $sql = "SELECT product_id, quantity FROM cart WHERE user_id = :user_id_IN";
+        $stmt = $this->dbConnect->prepare($sql);
+        $stmt->bindParam(":user_id_IN", $user_id_IN);
+        $stmt->execute();
+        
+        $data = json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
+        echo $data;
     }
 
     public function getUserIdFromToken($token_IN){
