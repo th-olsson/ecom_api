@@ -119,13 +119,16 @@ class Cart{
     public function checkout($token_IN){
         $user_id_IN = $this->getUserIdFromToken($token_IN);
 
-        //Get cart records (product_id and quantity) with specified user id
-        $sql = "SELECT product_id, quantity FROM cart WHERE user_id = :user_id_IN";
+        //Get products data from cart of specified user id
+        $sql = "SELECT c.product_id, p.name, c.quantity, c.quantity*p.price AS total_cost FROM cart AS c
+                JOIN products AS p ON p.id = c.product_id
+                WHERE c.user_id = :user_id_IN";
         $stmt = $this->dbConnect->prepare($sql);
         $stmt->bindParam(":user_id_IN", $user_id_IN);
         $stmt->execute();
         
         $data = json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
+        
         echo $data;
     }
 
