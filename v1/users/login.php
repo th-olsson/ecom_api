@@ -4,8 +4,6 @@ header('Content-Type: application/json');
 include("../../config/db.php");
 include("../../objects/User.php");
 
-
-
 if (isset($_GET['username']) && isset($_GET['password'])){
 
     //Verify hashed password: returns true if correct password
@@ -20,11 +18,11 @@ if (isset($_GET['username']) && isset($_GET['password'])){
     }
 
     $user = new User($db);
-    $return = new stdClass();
-    $return->token = $user->Login($_GET['username'], pwdVerify($db));
-    print_r(json_encode($return));
-
+    $user->login($_GET['username'], pwdVerify($db));
 } else {
-    echo json_encode("Error: username and password needs to be specified");
+    
+    $response = new stdClass();
+    $response->message = "Username and password needs to be specified";
+    print_r(json_encode($response));
 }
 ?>

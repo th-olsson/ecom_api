@@ -13,8 +13,13 @@ if (isset($_GET['email']) && isset($_GET['username']) && isset($_GET['password']
 
     $user->register($email, $username, $password);
 
-    echo json_encode("User has been created where email: $email and username: $username");
+    $response = new stdClass();
+    $response->message = "User created";
+    print_r(json_encode($response));
 } else {
-    echo json_encode("Error: email, username and password needs to be specified");
+    
+    $response = new stdClass();
+    $response->message = "Email, username and password needs to be specified";
+    print_r(json_encode($response));
 }
 ?>
