@@ -24,7 +24,29 @@ class User{
         $stmt->bindParam(":username_IN", $username_IN);
         $stmt->bindParam(":password_IN", $hashed_pwd);
 
-        return $stmt->execute();
+        
+        try{    
+            $stmt->execute();
+        } catch (PDOException $e) { //If register fails
+            
+            if ($e->errorInfo[1] == 1062) {
+                $response = new stdClass();
+                $response->message = "User with specified email or username exists already";
+                print_r(json_encode($response));
+                die();
+                
+            } else {
+                
+                $response = new stdClass();
+                $response->message = "Register failed";
+                print_r(json_encode($response));
+                die();
+            }
+        }
+
+        $response = new stdClass();
+        $response->message = "User created";
+        print_r(json_encode($response));
     }
 
     public function login($username_IN, $pwd_verify_IN){

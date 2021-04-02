@@ -12,10 +12,6 @@ if (isset($_GET['email']) && isset($_GET['username']) && isset($_GET['password']
     $user = new User($db);
 
     $user->register($email, $username, $password);
-
-    $response = new stdClass();
-    $response->message = "User created";
-    print_r(json_encode($response));
 } else {
     
     $response = new stdClass();
