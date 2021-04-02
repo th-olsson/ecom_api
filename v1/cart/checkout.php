@@ -16,11 +16,15 @@ include("../../objects/Cart.php");
             $cart->checkout($token);
 
         } else {
-            echo json_encode("Token is invalid");
+            $response = new stdClass();
+            $response->message = "Invalid token";
+            print_r(json_encode($response));
         }
 
     } else {
-        echo json_encode("Token needs to be specified");
+        $response = new stdClass();
+        $response->message = "Product and token needs to be specified";
+        print(json_encode($response));
     }
 
 ?>

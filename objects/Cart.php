@@ -22,7 +22,9 @@ class Cart{
         $stmt->bindParam(":product_id_IN", $product_id_IN);
         $stmt->execute();
         if ( $stmt->rowCount() == 0 ){
-            echo json_encode("Product of specified id doesn't exist");
+            $response = new stdClass();
+            $response->message = "Product not found";
+            print_r(json_encode($response));
             die();
         }
                 
@@ -43,7 +45,10 @@ class Cart{
             $stmt->bindParam(":quantity_IN", $quantity_IN);
             $stmt->execute();
 
-            echo json_encode("Product with id $product_id_IN was added to cart");
+            $response = new stdClass();
+            $response->message = "Product added to cart";
+            print_r(json_encode($response));
+
         } else { //If product exists already
 
             //Get quantity
@@ -58,7 +63,9 @@ class Cart{
             $stmt->bindParam(":product_id_IN", $product_id_IN);
             $stmt->execute();
 
-            echo json_encode("Another product with id $product_id_IN was added to cart");
+            $response = new stdClass();
+            $response->message = "Product added to cart";
+            print_r(json_encode($response));
         }
         
     }
@@ -72,7 +79,9 @@ class Cart{
         $stmt->bindParam(":product_id_IN", $product_id_IN);
         $stmt->execute();
         if ( $stmt->rowCount() == 0 ){
-            echo json_encode("Product of specified id doesn't exist");
+            $response = new stdClass();
+            $response->message = "Product not found";
+            print_r(json_encode($response));
             die();
         }
                 
@@ -84,7 +93,9 @@ class Cart{
         $stmt->execute();
 
         if ( $stmt->rowCount() == 0 ){ //If product doesn't exist in cart
-            echo json_encode("Item with specified id doesn't exist in cart");
+            $response = new stdClass();
+            $response->message = "Product not found in cart";
+            print_r(json_encode($response));
             die();
         }
 
@@ -102,7 +113,9 @@ class Cart{
             $stmt->bindParam(":product_id_IN", $product_id_IN);
             $stmt->execute();
 
-            echo json_encode("You have removed one product with id $product_id_IN from cart");
+            $response = new stdClass();
+            $response->message = "Product removed from cart";
+            print_r(json_encode($response));
 
         } else if ($quantity_IN == 1) { //If there's only one product in cart, delete record
             $sql = "DELETE FROM cart WHERE user_id = :user_id_IN AND product_id = :product_id_IN";
@@ -111,7 +124,9 @@ class Cart{
             $stmt->bindParam(":product_id_IN", $product_id_IN);
             $stmt->execute();
 
-            echo json_encode("You have removed all products with id $product_id_IN from cart");
+            $response = new stdClass();
+            $response->message = "Product removed from cart";
+            print_r(json_encode($response));
         }
         
     }
@@ -126,11 +141,15 @@ class Cart{
         $stmt = $this->dbConnect->prepare($sql);
         $stmt->bindParam(":user_id_IN", $user_id_IN);
         $stmt->execute();
+
+        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
-        $data = json_encode($stmt->fetchAll(PDO::FETCH_ASSOC));
+        $response = new stdClass();
+        $response->data = $data;
+        print_r(json_encode($response));
+
         
-        echo $data;
-    }
+        }
 
     public function getUserIdFromToken($token_IN){
         $sql = "SELECT user_id FROM sessions WHERE token = :token_IN";

@@ -17,11 +17,15 @@ include("../../objects/Cart.php");
             $cart->removeProduct($product_id, $token);
 
         } else {
-            echo json_encode("Token is invalid");
+            $response = new stdClass();
+            $response->message = "Invalid token";
+            print_r(json_encode($response));
         }
 
     } else {
-        echo json_encode("Product and token needs to be specified");
+        $response = new stdClass();
+        $response->message = "Product and token needs to be specified";
+        print_r(json_encode($response));
     }
 
 ?>
