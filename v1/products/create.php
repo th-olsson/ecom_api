@@ -12,8 +12,13 @@ if (isset($_GET['name']) && isset($_GET['price'])){
 
     $product->create($name, $price);
 
-    echo json_encode("Product created where name: $name and price: $price");
+    $response = new stdClass();
+    $response->message = "Product created";
+    print_r(json_encode($response));
 } else {
-    echo json_encode("Error: product name and price required");
+
+    $response = new stdClass();
+    $response->message = "Product name and price needs to be specified";
+    print_r(json_encode($response));
 }
 ?>

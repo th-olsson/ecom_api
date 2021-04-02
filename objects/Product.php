@@ -31,9 +31,13 @@ class Product{
         $stmt->execute();
 
         if ($stmt->rowCount() < 1){
-            echo json_encode("No product with id of $id_IN was found");
+            $response = new stdClass();
+            $response->message = "Product not found";
+            print_r(json_encode($response));
         } else {
-            echo json_encode("Product with id of $id_IN was successfully deleted");
+            $response = new stdClass();
+            $response->message = "Product deleted";
+            print_r(json_encode($response));
         }
     }
 
@@ -47,9 +51,13 @@ class Product{
         $stmt->execute();
         
         if ($stmt->rowCount() < 1){
-            echo json_encode("Product with id of $id_IN either doesn't exist or already has currently specified values");
+            $response = new stdClass();
+            $response->message = "Product not found or already has currently specified values";
+            print_r(json_encode($response));
         } else {
-            echo json_encode("Product with id of $id_IN was successfully updated to name: $name_IN, price: $price_IN");
+            $response = new stdClass();
+            $response->message = "Product updated";
+            print_r(json_encode($response));
         }
     }
 
@@ -59,12 +67,15 @@ class Product{
         
         //Stop script if execute fails
         if ( !$stmt->execute() ){
-            echo json_encode("Can't get products");
+            $response = new stdClass();
+            $response->message = "Can't get products";
+            print_r(json_encode($response));
             die();
         }
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        echo json_encode($data);
+        $response = new stdClass();
+        $response->data = $data;
+        print_r(json_encode($response));
     }
 }
 ?>

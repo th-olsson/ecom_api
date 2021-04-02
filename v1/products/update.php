@@ -13,6 +13,8 @@ if (isset($_GET['name']) && isset($_GET['price']) && isset($_GET['id'])){
 
     $product->update($name, $price, $id);
 } else {
-    echo json_encode("Error: product name, price and id required");
+    $response = new stdClass();
+    $response->message = "Product name, price and id needs to be specified";
+    print_r(json_encode($response));
 }
 ?>

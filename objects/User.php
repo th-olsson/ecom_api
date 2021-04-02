@@ -7,11 +7,6 @@ class User{
     # username
     # password
 
-    private $id;
-    private $email;
-    private $username;
-    private $password;
-
     //Database connection
     private $dbConnect;
     public function __construct($db){
@@ -39,14 +34,25 @@ class User{
         $stmt->bindParam(":username_IN", $username_IN);
         $stmt->execute();
 
-        //Checks if input matches a record in database & verifies hashed password
+        //Checks if password input is correct (matches a record in database & verifies hashed password)
         if ($stmt->rowCount() == 1 && $pwd_verify_IN == true){
-            $row = $stmt->fetch();
-            return $this->createToken($row['id'], $row['username']);
 
-            echo json_encode("User has successfully been logged in");
+            $row = $stmt->fetch();
+
+            $token = $this->createToken($row['id'], $row['username']);
+            
+            $response = new stdClass();
+            $response->message = "User logged in";
+            $response->token = $token;
+
+            print_r(json_encode($response));
         } else {
-            echo json_encode("Invalid login credentials");
+
+            $response = new stdClass();
+            $response->message = "Invalid login credentials";
+            $response->token = $token;
+
+            print_r(json_encode($response));
         }
     }
 
@@ -81,7 +87,7 @@ class User{
 
         $row = $stmt->fetch();
 
-        if(isset($row['token'])){
+        if (isset($row['token'])){
             return $row['token'];
         } else {
             return false;
