@@ -1,0 +1,40 @@
+CREATE DATABASE IF NOT EXISTS `ecom_api`;
+USE `ecom_api`;
+
+DROP TABLE IF EXISTS `cart`;
+DROP TABLE IF EXISTS `sessions`;
+DROP TABLE IF EXISTS `products`;
+DROP TABLE IF EXISTS `users`;
+
+CREATE TABLE `users`(
+`id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+`email` VARCHAR(50) NOT NULL UNIQUE,
+`username` VARCHAR(30) NOT NULL UNIQUE,
+`password` VARCHAR(60) NOT NULL
+);
+
+CREATE TABLE `products`(
+`id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+`name` VARCHAR(90) NOT NULL,
+`price` INT NOT NULL
+);
+
+CREATE TABLE `cart`(
+`user_id` INT NOT NULL,
+`product_id` INT NOT NULL,
+`quantity` INT NOT NULL,
+PRIMARY KEY (`user_id`, `product_id`, `quantity`),
+CONSTRAINT FK_user_id_cart FOREIGN KEY(user_id) REFERENCES users(id)
+ON DELETE CASCADE,
+CONSTRAINT FK_product_id FOREIGN KEY(product_id) REFERENCES products(id)
+ON DELETE CASCADE
+);
+
+CREATE TABLE `sessions`(
+`id` INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+`user_id` INT NOT NULL,
+`token` VARCHAR(32) NOT NULL,
+`last_used` INT NOT NULL,
+CONSTRAINT FK_user_id_session FOREIGN KEY(user_id) REFERENCES users(id)
+ON DELETE CASCADE
+);
