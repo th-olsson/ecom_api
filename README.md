@@ -1,11 +1,11 @@
-# Ecommerce API
+# E-commerce API
 This project is intended as a school assignment and is an exercise in PHP with MySQL and an introduction to APIs.
 
-The purpose of the project is to make an API for an ecommerce platform with the following requirements:
+The purpose of the project is to make an API for an e-commerce platform with the following requirements:
 - Users can register and login
 - Products can be created, read, updated and deleted
 - Users can add and remove products to cart and also checkout cart
-- Tokens should be used for authorization of certain endpoints
+- Use of active sessions: user will have to login again if being inactive for a certain period of time to regain certain permissions
 
 ## Install and use 
 1. You need Apache and MySQL installed on your computer
