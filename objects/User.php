@@ -72,7 +72,6 @@ class User{
 
             $response = new stdClass();
             $response->message = "Invalid login credentials";
-            $response->token = $token;
 
             print_r(json_encode($response));
         }
